@@ -110,8 +110,8 @@
     confidenceTensor.dispose();
     resultTensor.dispose();
     status.innerHTML = "辨識類別編號為：" + result.class + ",信心水準：" + parseInt(result.confidence * 1000000) / 10000.0 + " %";
-    if (typeof labels[idx] === "function") {
-      labels[idx](idx);
+    if (typeof labels[result.class] === "function") {
+      labels[result.class](result.class);
     }
     setTimeout(async ()=>{await proto.startDetect()}, 1);
   }
