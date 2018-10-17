@@ -29,7 +29,7 @@
   }
 
   async function start(modelName) {
-    Module.call(this);
+    // Module.call(this);
     loadJS('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.12.5');
 
     // load models
