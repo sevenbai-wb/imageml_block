@@ -71,8 +71,8 @@
   }
 
   function deeplearn(modelName) {
-    setTimeout(()=>{
-      start(modelName);
+    setTimeout(async ()=>{
+      await start(modelName);
     }, 1);
   }
 
@@ -84,7 +84,7 @@
     });
 
   proto.onLabel = function (idx, callback) {
-    this.labels[idx] = callback;
+    self.labels[idx] = callback;
   }
 
   proto.startDetect = async function () {
@@ -109,7 +109,7 @@
     if (typeof self.labels[idx] === "function") {
       self.labels[idx](idx);
     }
-    setTimeout(()=>{self.startDetect()}, 1);
+    setTimeout(async ()=>{await self.startDetect()}, 1);
   }
 
   scope.module.deeplearn = deeplearn;
