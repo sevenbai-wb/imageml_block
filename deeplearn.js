@@ -10,6 +10,7 @@
   var proto;
   var Module = scope.Module;
   const HOST_URL = 'https://imageml.webduino.io';
+  
 
   function loadJS(filePath) {
     var req = new XMLHttpRequest();
@@ -65,6 +66,7 @@
     self.status.id = 'status';
     document.body.appendChild(self.status);
 
+    self.labels = {};
     await self.startDetect();
   }
 
@@ -82,7 +84,7 @@
     });
 
   proto.onLabel = function (idx, callback) {
-    this.labels[idx] = callback;
+    self.labels[idx] = callback;
   }
 
   proto.startDetect = async function () {
@@ -104,6 +106,9 @@
     confidenceTensor.dispose();
     resultTensor.dispose();
     self.status.innerHTML = "辨識類別編號為：" + result.class + ",信心水準：" + parseInt(result.confidence * 1000000) / 10000.0 + " %";
+    if (typeof self.labels[idx] === "function") {
+      self.labels[idx](idx);
+    }
     setTimeout(()=>{self.startDetect()}, 1);
   }
 
