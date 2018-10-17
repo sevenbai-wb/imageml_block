@@ -70,7 +70,7 @@
 
   function deeplearn(modelName) {
     setTimeout(()=>{
-      await start(modelName);
+      start(modelName);
     }, 1);
   }
 
@@ -104,7 +104,7 @@
     confidenceTensor.dispose();
     resultTensor.dispose();
     self.status.innerHTML = "辨識類別編號為：" + result.class + ",信心水準：" + parseInt(result.confidence * 1000000) / 10000.0 + " %";
-    setTimeout(()=>{await self.startDetect()}, 1);
+    setTimeout(()=>{self.startDetect()}, 1);
   }
 
   scope.module.deeplearn = deeplearn;
