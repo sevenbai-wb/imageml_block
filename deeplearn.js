@@ -25,7 +25,7 @@
   }
 
   async function start(modelName) {
-    Module.call(self);
+    // Module.call(self);
     loadJS('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.12.5');
 
     // load models
