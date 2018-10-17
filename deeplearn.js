@@ -70,7 +70,6 @@
     status.id = 'status';
     document.body.appendChild(status);
 
-    labels = {};
     await proto.startDetect();
   }
 
