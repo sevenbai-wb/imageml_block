@@ -112,7 +112,7 @@
     if (typeof labels[result.class] === "function") {
       labels[result.class](result.class);
     }
-    setTimeout(async ()=>{await proto.startDetect()}, 1);
+    setTimeout(async ()=>{await proto.startDetect()}, 100);
   }
 
   scope.module.deeplearn = deeplearn;
