@@ -1,5 +1,5 @@
 //https: //blockly-demo.appspot.com/static/demos/blockfactory_old/index.html#ckpupe
-Blockly.Blocks['deeplearn_classifier'] = {
+Blockly.Blocks['imageml_classifier'] = {
   init: function () {
     this.appendDummyInput()
       .appendField("模型名稱：")
@@ -12,7 +12,7 @@ Blockly.Blocks['deeplearn_classifier'] = {
 };
 
 
-Blockly.Blocks['deeplearn_label'] = {
+Blockly.Blocks['imageml_label'] = {
   init: function () {
     this.appendDummyInput()
       .appendField(new Blockly.FieldVariable("imageClassifier"), "name")

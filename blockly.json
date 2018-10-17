@@ -1,5 +1,5 @@
 {
-  "types": ["deeplearn_classifier", "deeplearn_label"],
+  "types": ["imageml_classifier", "imageml_label"],
   "category": "toolbox",
   "scripts": [
     "blockly/blocks.js",
