@@ -1,14 +1,12 @@
 {
-  "types": ["deeplearn_camera","deeplearn_classifier", "deeplearn_label","deeplearn_objectDetect"],
+  "types": ["deeplearn_classifier", "deeplearn_label"],
   "category": "toolbox",
   "scripts": [
     "blockly/blocks.js",
     "blockly/javascript.js"
   ],
   "dependencies": [
-    "waspot.js",
     "deeplearn.js",
-    "objectDetect.js",
     "deeplearn-blockly.js"
   ],
   "msg": "blockly/msg",

@@ -2,13 +2,8 @@
 
   'use strict';
 
-  window.getVideoClassifier = function (cameraURL, modelURL) {
-    return new webduino.module.deeplearn(cameraURL, modelURL);
+  window.getVideoClassifier = function (modelName) {
+    return new webduino.module.deeplearn(modelName);
   };
-
-  window.getObjectDetect =  function (cameraURL, modelURL) {
-    return new webduino.module.objectDetect(cameraURL, modelURL);
-  };
-
   
 }(window, window.webduino));

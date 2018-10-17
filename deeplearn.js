@@ -6,9 +6,10 @@
   }
 }(function (scope) {
   'use strict';
-  var self;
+  var self = this;
   var proto;
   var Module = scope.Module;
+  const HOST_URL = 'https://imageml.webduino.io';
 
   function loadJS(filePath) {
     var req = new XMLHttpRequest();
@@ -22,34 +23,55 @@
     headElement.appendChild(newScriptElement);
   }
 
+  async function start(modelName) {
+    Module.call(self);
+    loadJS('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.12.5');
 
-  function deeplearn(cameraURL, modelURL) {
-    Module.call(this);
-    loadJS('https://marty5499.github.io/webduino-module-deeplearn/videoClassifier.js');
-    console.log("create deeplearn...");
-    this.canvas = createCanvas();
-    this.status = createStatus();
-    this.imageDL = new ImageDL();
-    this.modelURL = modelURL;
-    this.cameraURL = cameraURL;
-    this.startDetect();
-    this.labels = {};
+    // load models
+    try {
+      const mobilenet = await tf.loadModel(HOST_URL + '/mobilenet/v1_0.25_224/model.json');
+      const layer = mobilenet.getLayer('conv_pw_13_relu');
+      self.mobilenet = tf.model({inputs: mobilenet.inputs, outputs: layer.output});
+      self.secondmodel = await tf.loadModel(HOST_URL + '/ml_models/' + modelName + '/model.json');
+    } catch (e) {
+      alert('Load model error!');
+    }
+
+    // create video element
+    self.vid = document.createElement('video');
+    self.vid.width = 224;
+    self.vid.height = 224;
+    self.vid.autoplay = true;
+    document.body.appendChild(self.vid);
+    // start webcam
+    try {
+      navigator.mediaDevices.getUserMedia({
+        video: {
+          width: 224,
+          height: 224,
+          facingMode: "environment"
+        }
+      })
+      .then(stream => {
+        self.vid.srcObject = stream;
+        self.vid.play();
+      });
+    } catch (e) {
+      alert('WebCam is not available!');
+    }
+
+    // create status message
+    self.status = document.createElement('div');
+    self.status.id = 'status';
+    document.body.appendChild(self.status);
+
+    await self.startDetect();
   }
 
-  function createStatus() {
-    var elem = document.createElement('div');
-    elem.id = 'status';
-    document.body.appendChild(elem);
-    return elem;
-  }
-
-  function createCanvas() {
-    var elem = document.createElement('canvas');
-    elem.id = 'c1';
-    elem.width = '224';
-    elem.height = '224';
-    document.body.appendChild(elem);
-    return elem;
+  function deeplearn(modelName) {
+    setTimeout(()=>{
+      await start(modelName);
+    }, 1);
   }
 
   deeplearn.prototype = proto =
@@ -59,35 +81,30 @@
       }
     });
 
-  proto.onLabel = function (label, callback) {
-    this.labels[label] = callback;
+  proto.onLabel = function (idx, callback) {
+    this.labels[idx] = callback;
   }
 
-  proto.startDetect = function () {
-    var self = this;
-    var url = '';
-
-    self.predict = function () {}
-    self.imageDL.load(self.modelURL, function () {
-      console.log("start...");
-      self.predict = async function (img, callback) {
-        self.imageDL.predict(img, callback);
-      }
+  proto.startDetect = async function () {
+    const resultTensor = tf.tidy(() => {
+      const webcamImage = tf.fromPixels(self.vid);
+      const batchedImage = webcamImage.expandDims(0);
+      const img = batchedImage.toFloat().div(tf.scalar(127)).sub(tf.scalar(1));
+      const activation = self.mobilenet.predict(img).flatten().expandDims(0);
+      const predictions = self.secondmodel.predict(activation);
+      return predictions.as1D();
     });
-    self.camera = new Camera(self.cameraURL).onCanvas('c1', function (canvas) {
-      //new Camera('ws://192.168.0.199:8889/rws/ws').onCanvas('c1', function (canvas) {
-      //new Camera('ws://192.168.43.204:8889/rws/ws').onCanvas('c1', function (canvas) {
-      var img = new Image(); //document.getElementById("image");
-      img.src = canvas.toDataURL();
-      img.onload = function () {
-        self.predict(img, function (idx, c) {
-          if (typeof self.labels[idx] === "function") {
-            self.labels[idx](idx);
-          }
-          self.status.innerHTML = "辨識標籤為..." + idx + ",信心水準：" + parseInt(c * 1000000) / 10000.0 + " %";
-        });
-      };
-    });
+    let classTensor = resultTensor.argMax();
+    let confidenceTensor = resultTensor.max();
+    let result = {
+      class: (await classTensor.data())[0],
+      confidence: (await confidenceTensor.data())[0]
+    }
+    classTensor.dispose();
+    confidenceTensor.dispose();
+    resultTensor.dispose();
+    self.status.innerHTML = "辨識類別編號為：" + result.class + ",信心水準：" + parseInt(result.confidence * 1000000) / 10000.0 + " %";
+    setTimeout(()=>{await self.startDetect()}, 1);
   }
 
   scope.module.deeplearn = deeplearn;
