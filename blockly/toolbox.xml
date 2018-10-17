@@ -1,0 +1,31 @@
+<category id="catDeeplearn">
+  <!--
+  <block type="variables_set">
+    <field name="VAR">camera</field>
+    <value name="VALUE">
+      <block type="deeplearn_camera">
+      </block>
+    </value>
+  </block>
+  -->
+  <block type="variables_set">
+    <field name="VAR">imageClassifier</field>
+    <value name="VALUE">
+      <block type="deeplearn_classifier">
+      </block>
+    </value>
+  </block>
+  <block type="deeplearn_label">
+  </block>
+  <block type="variables_set">
+    <field name="VAR">objectDetect</field>
+    <value name="VALUE">
+      <block type="deeplearn_objectDetect">
+      </block>
+    </value>
+  </block>
+  <block type="deeplearn_detect">
+  </block>
+  <block type="deeplearn_objinfo">
+  </block>
+</category>
