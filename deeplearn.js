@@ -9,7 +9,7 @@
   // let self = this;
   let proto;
   let Module = scope.Module;
-  const HOST_URL = 'https://imageml.webduino.io';
+  const HOST_URL = 'https://mldemo.webduino.io';
   let mobilenet;
   let secondmodel;
   let vid;
