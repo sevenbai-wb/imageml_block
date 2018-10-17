@@ -84,7 +84,7 @@
     });
 
   proto.onLabel = function (idx, callback) {
-    self.labels[idx] = callback;
+    this.labels[idx] = callback;
   }
 
   proto.startDetect = async function () {
