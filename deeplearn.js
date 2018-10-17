@@ -14,7 +14,7 @@
   let secondmodel;
   let vid;
   let status;
-  let labels = {};
+  let labels = [];
 
   function loadJS(filePath) {
     var req = new XMLHttpRequest();
