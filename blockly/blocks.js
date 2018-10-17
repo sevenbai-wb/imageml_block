@@ -7,7 +7,7 @@ Blockly.Blocks['imageml_classifier'] = {
     this.setOutput(true, null);
     this.setColour(230);
     this.setTooltip('');
-    this.setHelpUrl('');
+    this.setHelpUrl('https://mldemo.webduino.io');
   }
 };
 
@@ -26,6 +26,6 @@ Blockly.Blocks['imageml_label'] = {
     this.setNextStatement(true, null);
     this.setColour(75);
     this.setTooltip('');
-    this.setHelpUrl('');
+    this.setHelpUrl('https://mldemo.webduino.io');
   }
 };
